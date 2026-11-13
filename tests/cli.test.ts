@@ -134,3 +134,16 @@ it("prints usage without a file argument", () => {
     stderr: "Usage: sops-env [--base64] <environment.sops.yaml>\n",
   })
 })
+
+it("reports an unknown option with usage", () => {
+  for (const [args, option] of [
+    [["--foo", "file.sops.yaml"], "--foo"],
+    [["-hx"], "-x"],
+  ] as const) {
+    expect(runSopsEnv(...args)).toEqual({
+      exitCode: 1,
+      stdout: "",
+      stderr: `Unknown option '${option}'.\nUsage: sops-env [--base64] <environment.sops.yaml>\n`,
+    })
+  }
+})

@@ -17,19 +17,22 @@ Options:
   -h, --help  Show this help
 `
 
+const options = {
+  base64: { type: "boolean" },
+  help: { type: "boolean", short: "h" },
+} as const
+
 function main(args: string[]) {
   let parsed
   try {
-    parsed = parseArgs({
-      args,
-      allowPositionals: true,
-      options: {
-        base64: { type: "boolean" },
-        help: { type: "boolean", short: "h" },
-      },
-    })
+    parsed = parseArgs({ args, allowPositionals: true, options })
   } catch (error) {
-    throw new SopsEnvError(`${(error as Error).message}\n${usage}`)
+    // The parseArgs message for an unknown option adds a long hint about `--` and varies between Node.js and Bun.
+    const message =
+      (error as NodeJS.ErrnoException).code === "ERR_PARSE_ARGS_UNKNOWN_OPTION"
+        ? `Unknown option '${findUnknownOption(args)}'.`
+        : (error as Error).message
+    throw new SopsEnvError(`${message}\n${usage}`)
   }
   const { values, positionals } = parsed
   if (values.help) {
@@ -42,6 +45,22 @@ function main(args: string[]) {
   const output = formatEnv(decryptFile(positionals[0]!), { base64: values.base64 })
   if (output) {
     process.stdout.write(`${output}\n`)
+  }
+}
+
+/** Returns the first option in `args` that the CLI does not define, as the user wrote it. */
+function findUnknownOption(args: string[]) {
+  const { tokens } = parseArgs({
+    args,
+    allowPositionals: true,
+    options,
+    strict: false,
+    tokens: true,
+  })
+  for (const token of tokens) {
+    if (token.kind === "option" && !Object.hasOwn(options, token.name)) {
+      return token.rawName
+    }
   }
 }
 
