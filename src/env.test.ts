@@ -54,11 +54,15 @@ describe("formatEnv", () => {
     )
   })
 
-  it("rejects a missing or non-mapping env section", () => {
-    expect(() => formatEnv({})).toThrow("The env section is missing or is not a mapping.")
-    expect(() => formatEnv({ env: ["A=1"] })).toThrow(
-      "The env section is missing or is not a mapping.",
-    )
+  it("rejects a missing or non-mapping env section and points to the supported file formats", () => {
+    const dotenv = { A: "1" }
+    const dotenvWithEnv = { env: "production", A: "1" }
+    for (const document of [{}, dotenv, dotenvWithEnv, { env: ["A=1"] }, { env: null }]) {
+      expect(() => formatEnv(document)).toThrow(
+        "The env section is missing or is not a mapping. " +
+          "Put the variables under the env key of a YAML or JSON file; dotenv files are not supported.",
+      )
+    }
   })
 
   it("rejects null and collection values", () => {

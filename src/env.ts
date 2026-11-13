@@ -15,7 +15,11 @@ export interface FormatEnvOptions {
 export function formatEnv(document: unknown, { base64 = false }: FormatEnvOptions = {}) {
   const env = isRecord(document) ? document.env : undefined
   if (!isRecord(env)) {
-    throw new SopsEnvError("The env section is missing or is not a mapping.")
+    // sops decrypts a dotenv file to a flat mapping, which has no nested env mapping.
+    throw new SopsEnvError(
+      "The env section is missing or is not a mapping. " +
+        "Put the variables under the env key of a YAML or JSON file; dotenv files are not supported.",
+    )
   }
   const invalidNames = Object.keys(env).filter(key => !isValidName(key))
   if (invalidNames.length) {
