@@ -55,5 +55,5 @@ ssh dokku@example.com config:set --encoded my-app $config
 ### Values
 
 - Strings, numbers, and booleans are printed as text, such as `PORT=3000` and `DEBUG=true`.
-- sops normalizes numbers, such as `1.50` to `1.5`; quote a value to keep its exact text.
+- Quote a value to keep its exact text: sops rewrites unquoted numbers and dates, such as `1.50` to `1.5`, `0x10` to `16`, and `2024-01-01` to `2024-01-01T00:00:00Z`.
 - `null`, lists, and maps are rejected: quote a value, such as `EMPTY: ''`, to print it as text.
