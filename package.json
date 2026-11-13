@@ -1,6 +1,6 @@
 {
   "name": "sops-env",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Print the env section of a SOPS-encrypted file as KEY=VALUE lines, optionally with base64-encoded values.",
   "keywords": [
     "cli",
