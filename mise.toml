@@ -1,0 +1,10 @@
+[settings]
+lockfile = true
+
+[tools]
+# Tests encrypt fixtures with sops and age.
+age = "1.3.2"
+bun = "1.4.4"
+lefthook = "latest"
+node = "26"
+sops = "3.13.3"
