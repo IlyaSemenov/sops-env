@@ -10,6 +10,7 @@ Print the `env` section of a [SOPS](https://github.com/getsops/sops)-encrypted f
 ## Usage
 
 Keep the environment variables under the `env` key of a SOPS file; other keys are ignored.
+Name the variables with ASCII letters, digits, and `_`, and do not start a name with a digit.
 An encrypted file `environment.sops.yaml` looks like this:
 
 ```yaml
