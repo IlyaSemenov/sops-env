@@ -36,7 +36,6 @@
     "prepare": "lefthook install",
     "prepublishOnly": "bun run build",
     "release": "changesets-local",
-    "release:check": "bun run build && bun run types && bun run test",
     "test": "bun test",
     "types": "bun check && bun check -p tests"
   },
